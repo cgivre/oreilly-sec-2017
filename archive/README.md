@@ -27,3 +27,16 @@ Charles Givre:
 cgivre@thedataist.com
 @cgivre
 Blog: thedataist.com
+
+## Slides
+
+Day 1:
+
+* [Introductions](https://www.icloud.com/keynote/0ZPZ_atRT2I4UXwXYWUIc6iNQ#oreilly-day1-par1-intro)
+* [Visualizations](https://www.icloud.com/keynote/0sRstG2z-80UaGnCuz84eHcpw#oreilly-day1-part2-viz)
+* [EDA](https://www.icloud.com/keynote/0eX69xvLAnqZ1z8n2pHfnyVNA#oreilly-day1-part3-eda)
+
+Day 2:
+
+* [Unsupervised Learning](https://www.icloud.com/keynote/0HoMGoBMVRdXfhwCBXu7qms9A#oreilly-day2-intro)
+* [Supervised Learning](https://www.icloud.com/keynote/0s2REW3AnodhHNcATCLth7fSA#oreilly-day2-part2-supervised)
