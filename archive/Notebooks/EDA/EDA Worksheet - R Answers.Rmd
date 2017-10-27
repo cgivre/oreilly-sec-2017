@@ -16,7 +16,7 @@ First you're going to want to create a data frame from the dailybots.csv file wh
 ```{r echo=FALSE}
 ### use "read_csv" from `readr`
 ### see `vignette("column-types")` for details on col_types
-dailybot <- read_csv("../data/dailybots.csv")
+dailybot <- read_csv("../../data/dailybots.csv")
 
 ### look at a summary of the data
 summary(dailybot)

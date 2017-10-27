@@ -63,7 +63,7 @@ We will compare the two and see which performs better on the data.
 
 ```{r}
 ctrl <- trainControl(method="repeatedcv", # do cross validation
-                     repeats=5, # 5 folds
+                     number=5, repeats=2, # 5 folds, repeated twice
                      classProbs=TRUE)  # save the probabilities (may speed up if FALSE)
 
 # remember random forsts do no need to be scaled at all

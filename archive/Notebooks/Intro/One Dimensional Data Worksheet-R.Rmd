@@ -13,7 +13,7 @@ library(tidyverse)
 ```
 
 ## Exercise 1
-Create a data.frame with 100 random integers in a column called "x", then filter out odd integers.  Hint:  you can use either `sample` or `runif` with `floor` to generate integers.  Print out the first 20 numbers.
+Create a vector 100 random integers in a column called "x", then filter out odd integers.  Hint:  you can use either `sample` or `runif` with `floor` to generate integers.  Print out the first 20 numbers.
 
 ```{r}
 set.seed(1)  # just to make it repeatable

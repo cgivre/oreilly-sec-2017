@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo=FALSE)
 ```
 
 ## Exercise 1
-Create a data.frame with 100 random integers in a column called "x", then filter out odd integers.  Hint:  you can use either `sample` or `runif` with `floor` to generate integers.  Print out the first 20 numbers.
+Create a vector with 100 random integers in a column called "x", then filter out odd integers.  Hint:  you can use either `sample` or `runif` with `floor` to generate integers.  Print out the first 20 numbers.
 
 ```{r}
 set.seed(1)

@@ -65,6 +65,13 @@ In the `data` folder, there is file called `studentData.csv` consisting of stude
 The first person to tell me which student has the highest average test score, and what it is wins something.
 
 ```{r}
+students <- read_csv( '../../data/studentData.csv')
+
+students %>% 
+  gather(cat, val, -`Student ID`) %>% 
+  group_by(`Student ID`) %>% 
+  summarize(avgtest = mean(val)) %>% 
+  arrange(-avgtest)
 
 ```
 
