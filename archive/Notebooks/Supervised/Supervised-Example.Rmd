@@ -8,16 +8,20 @@ Load up Libraries...
 ```{r warning=FALSE, message=FALSE}
 library(tidyverse)
 library(caret)
+# library(doMC)  # this works on mac to parralize across cores 
+# registerDoMC(cores = 8) # set number of cores or leave off for all
+
 library(randomForest)  # random forest, caret will load this automatically
 library(kernlab) # SVM, caret will load this automatically
 ```
 
-Load up the data, be sure to set the target variable as a factor (For R)
+Load up the data, and only use the "gameoverdga" and "alexa" domains. 
+
+It's also nice to set the target variable as a factor (For R), but it's not required.
 
 ```{r}
-dga <- read_csv("data/dga-full.csv") %>%
-  mutate(dsrc = factor(dsrc))
-# helps to have the target class as a factor
+dga <- read_csv("../../data/dga-full.csv")
+
 ```
 
 ### Split data into a training and testing data set
@@ -42,14 +46,15 @@ We will be creating a two-class classifier.
 
 ```{r}
 
-dga2 <- dga %>% 
-  mutate(dsrc = as.character(dsrc)) %>% 
-  dplyr::filter(dsrc %in% c("alexa", "gameoverdga")) %>% 
-  mutate(dsrc = factor(dsrc))
+dga2 <- dga %>%
+  filter(dsrc %in% c("alexa", "nivdort")) %>% 
+  # when creating a factor, the first lwevel is the default "positive" class.
+  mutate(dsrc = factor(dsrc, levels=c("nivdort", "alexa")))
+
 
 # for 30/70 train/test, set p = 0.3, or p= 0.15 for 15% split
 set.seed(1) # make the split repeatable
-trainrows <- createDataPartition(dga2$dsrc, p = 0.2, list = FALSE)
+trainrows <- createDataPartition(dga2$dsrc, p = 0.2, list = FALSE) %>% as.vector
 
 traindata <- dga2[trainrows, ]
 testdata <- dga2[-trainrows, ]
@@ -61,9 +66,14 @@ Traing the first model using Random Forest, and the second for a Support Vector 
 
 We will compare the two and see which performs better on the data.
 
+The First step is to set up a "trainControl" object, this will set everything about the 
+trianing process.  
+
 ```{r}
-ctrl <- trainControl(method="repeatedcv", # do cross validation
+ctrl <- trainControl(method="repeatedcv", # skipping cross validation for now
                      number=5, repeats=2, # 5 folds, repeated twice
+                     # can save each prediction on resamples, useful for insight into tuning
+                     # savePredictions = TRUE, # save hold-out predictions for each resample
                      classProbs=TRUE)  # save the probabilities (may speed up if FALSE)
 
 # remember random forsts do no need to be scaled at all
@@ -101,6 +111,7 @@ Which one looks better?
 plot(varImp(rfFit))
 ```
 
+
 ### For Fun, look at the predicted probabilities.
 
 Could even plot the predicted probabilities using a density (or histogram) plot.
@@ -121,14 +132,55 @@ ground truth, so we see the probability of a domain being a DGA when it is or is
 # add in the real label
 rez$dsrc <- testdata$dsrc
 
-### look at spread of just the "gameoverdga" value by the dsrc
+### look at spread of the positive class by the dsrc
 rez %>% 
   # group by dsrc so we can number them
   group_by(dsrc) %>% 
   # the row numbers will make the final even compact
   mutate(rownum = row_number()) %>% 
   select(-alexa) %>% 
-  spread(dsrc, gameoverdga) %>% 
+  spread(dsrc, nivdort) %>% 
   select(-rownum) %>% 
   summary
+```
+
+### Extra Research: Precision/Recall Plot and F-Measures
+
+### look at precision/recall and F measure
+
+```{r}
+# get a clean prediction object on the test data
+first <- predict(rfFit, testdata, type="prob")
+# set up the cut-off thresholds we want to run through
+steps <-seq(min(first$nivdort), max(first$nivdort), length.out = 100)
+
+# Now this may be a lot, forech x in steps:
+# make estimations with that cutoff and
+# calculate three different F-measures (varying beta)
+# and save off the cutoff, precision and recall with them.
+rez <- map_df(steps, function(x) {
+  estimate <- factor(ifelse(first$nivdort >= x, "nivdort", "alexa"), levels=c("nivdort", "alexa"))
+  tibble(cutoff = x, 
+         `beta=1` = F_meas(estimate, reference=testdata$dsrc, beta=1), 
+         `beta=2` = F_meas(estimate, reference=testdata$dsrc, beta=2), 
+         `beta=0.5` = F_meas(estimate, reference=testdata$dsrc, beta=0.5), 
+         prec=precision(estimate, testdata$dsrc),
+         recall = recall(estimate, testdata$dsrc))
+})
+
+# pull out just the points where the F_measure is highest for each beta
+justpoint <- rez %>% gather(fm, val, -cutoff, -prec, -recall) %>% 
+  group_by(fm) %>% filter(val == max(val))
+
+# plot the whole thing
+ggplot(rez, aes(recall, prec, color=cutoff)) + 
+  geom_line(size=2) + # made it a little thicker
+  geom_point(data=justpoint, color="black", size=4, shape="x") +
+  # if you have the 'ggrepel' package installed, uncomment the following
+  #ggrepel::geom_text_repel(data=justpoint, aes(label=fm), color="bla") +
+  scale_colour_gradientn(colours=rainbow(4)) + # rainbow is for diverse scale, not aesthetics
+  scale_x_continuous("Recall", limits=c(0,1), breaks=seq(0,1,0.2)) +
+  scale_y_continuous("Precision", limits=c(0,1), breaks=seq(0,1,0.2)) +
+  theme_minimal()
+
 ```
