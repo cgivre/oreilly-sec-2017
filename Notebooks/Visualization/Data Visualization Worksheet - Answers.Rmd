@@ -29,7 +29,7 @@ The next step is to filter both by industry and by botfam. Filter for "Governmen
 
 
 ```{r}
-toplot <- ...
+toplot <- bots %>% 
   filter(industry == "Government/Politics",
          botfam %in% c('ConfickerAB', 'Bedep'))
   
@@ -56,6 +56,20 @@ can be set in the {r} tag.
 ggplot(toplot, aes(date, hosts, color=botfam)) + geom_line() +
   theme_bw() +
   theme(legend.position="bottom")
+```
+
+### Try faceting each type
+
+Try a `facet_wrap` on each botfam, with facet_wrap, if you have only one
+variable, you can leave off the first element: `facet_wrap(~botfam)` and 
+don't forget to set `nrow=1` in the facet to ensure they are side-by-side.
+
+```{r}
+ggplot(toplot, aes(date, hosts, color=botfam)) + geom_line() +
+  facet_wrap(~botfam, nrow=1) +
+  theme_bw() +
+  theme(legend.position="none")
+
 ```
 
 ### Interactive
