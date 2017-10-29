@@ -1,5 +1,5 @@
 # Data Analysis and Machine Learning for Cybersecurity - O'Reilly Security Conference 2017
-Welcome to tData Analysis and Machine Learning for Cybersecurity at O'Reilly Security Conference.  This repository contains all the files which you will need for the class.  
+Welcome to Data Analysis and Machine Learning for Cybersecurity at O'Reilly Security Conference.  This repository contains all the files which you will need for the class.  
 
 ## Course Environment
 For this class, we will be using the Griffon Data Science Environment which is available here: https://github.com/gtkcyber/griffon-vm.  This is a very large file, so please download this ahead of time.
@@ -19,12 +19,14 @@ R:
 * [Data Wranging Cheat Sheet](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
 
 ## Instructor Info:
-Jay Jacobs: 
-jay@beechplane.com
-@jayjacobs
+### Jay Jacobs: 
 
-Charles Givre:
-cgivre@thedataist.com
-https://www.linkedin.com/in/cgivre/
-@cgivre
-Blog: http://thedataist.com
+* jay@beechplane.com
+* @jayjacobs
+
+### Charles Givre:
+
+* cgivre@thedataist.com
+* https://www.linkedin.com/in/cgivre/
+* @cgivre
+* Blog: http://thedataist.com
