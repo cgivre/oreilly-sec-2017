@@ -54,6 +54,16 @@ can be set in the {r} tag.
 
 ```
 
+### Try faceting each type
+
+Try a `facet_wrap` on each botfam, with facet_wrap, if you have only one
+variable, you can leave off the first element: `facet_wrap(~botfam)` and 
+don't forget to set `nrow=1` in the facet to ensure they are side-by-side.
+
+```{r}
+
+```
+
 ### Interactive
 
 We won't go to interactive graphics quite yet, but if you wanted to look for an interactive option, see
